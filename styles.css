@@ -1664,6 +1664,7 @@ body.page {
 .home-gallery-header button {
   background: none;
   border: none;
+  width: 30%;
   color: #60a5fa;
   font-weight: 600;
   cursor: pointer;
