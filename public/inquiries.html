@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Inquiries</title>
+  <link rel="stylesheet" href="./styles.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+
+<body class="inquiries-page">
+
+  <div id="navbar" class="inquiries-page__navbar"></div>
+  <script type="module" src="./js/navbar.js"></script>
+
+  <header class="page-header">
+    <h1 class="page-title">Inquiries</h1>
+  </header>
+
+  <main class="inquiries-content">
+
+    <section
+      id="newInquirySection"
+      class="inquiries-section inquiries-section--new"
+    >
+      <header class="inquiries-section-header">
+        <h2 class="inquiries-section-title">New Inquiry</h2>
+        <p class="inquiries-section-subtitle">
+          Submit a question, correction, or claim request
+        </p>
+      </header>
+
+      <form class="inquiries-form">
+
+        <div class="form-group">
+          <input
+            id="inqName"
+            class="formInput inquiries-input"
+            placeholder="Name"
+          >
+        </div>
+
+        <div class="form-group">
+          <input
+            id="inqDescription"
+            class="formInput inquiries-input"
+            placeholder="Description"
+          >
+        </div>
+
+        <div class="form-group">
+          <input
+            id="inqId"
+            class="formInput inquiries-input"
+            placeholder="Item ID"
+          >
+        </div>
+
+        <div class="form-group">
+          <select
+            id="inqType"
+            class="formSelect inquiries-select"
+          >
+            <option>Report a mistake</option>
+            <option>Claim a lost item</option>
+            <option>Add info to a lost item</option>
+            <option>Wrong person claimed item</option>
+          </select>
+        </div>
+
+        <div class="form-actions">
+          <button
+            id="submitInquiry"
+            class="formBtn inquiries-submit-btn"
+            type="button"
+          >
+            Submit Inquiry
+          </button>
+        </div>
+
+      </form>
+    </section>
+
+    <section
+      id="allInquiriesSection"
+      class="inquiries-section inquiries-section--list">
+      <header class="inquiries-section-header">
+        <h2 class="inquiries-section-title">All Inquiries</h2>
+        <p class="inquiries-section-subtitle">
+          Review submitted inquiries and their status
+        </p>
+      </header>
+
+      <div
+        id="inquiryList"
+        class="inquiryList inquiries-list"
+      ></div>
+    </section>
+
+  </main>
+
+  <script type="module" src="./js/inquiries.js"></script>
+
+</body>
+</html>

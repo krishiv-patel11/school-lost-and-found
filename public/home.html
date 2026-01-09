@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="./styles.css">
+
+  <script type="module" src="./js/navbar.js"></script>
+  <script type="module" src="./js/home.js"></script>
+</head>
+
+<body class="home-page">
+
+  <div id="navbar"></div>
+
+  <div class="home-wrapper">
+
+    <section class="home-hero">
+      <h1>Welcome to the Lost &amp; Found Center</h1>
+      <p>Recover lost items or submit found items for your school</p>
+    </section>
+
+    <section class="home-primary-actions">
+      <div class="primary-card">
+        <h2>Lost Something?</h2>
+        <p>Browse recently reported lost items and see if yours is listed.</p>
+        <button onclick="go('recently-lost')">View Lost Items</button>
+      </div>
+
+      <div class="primary-card">
+        <h2>Found Something?</h2>
+        <p>Submit a found item so it can be returned to its owner.</p>
+        <button onclick="go('report')">Submit Found Item</button>
+      </div>
+    </section>
+
+    <section class="home-section">
+      <h2>Quick Actions</h2>
+      <div class="quick-actions-grid">
+        <button onclick="go('inbox')">Inbox</button>
+        <button onclick="go('inquiries')">Inquiries</button>
+        <button onclick="go('look-or-claim')">Look / Claim</button>
+        <button onclick="go('recently-found')">Recently Found</button>
+        <button onclick="go('recently-lost')">Recently Lost</button>
+        <button onclick="go('report')">Report Item</button>
+        <button onclick="go('risklist')">Risk List</button>
+      </div>
+    </section>
+
+    <section class="home-section">
+      <div class="home-gallery-header">
+        <h2>Most Recent Found Items</h2>
+        <button onclick="go('recently-found')">See All</button>
+      </div>
+
+      <div id="foundGallery" class="home-gallery-grid"></div>
+    </section>
+
+    <section class="risk-section">
+      <h2>Risk List</h2>
+      <p>
+        View items that are at high risk of remaining unclaimed or have been
+        lost for over 30 days.
+      </p>
+      <button onclick="go('risklist')">View Risk List</button>
+    </section>
+
+    <section class="home-section">
+      <h2>Frequently Asked Questions</h2>
+
+      <div class="faq-item">
+        <button class="faq-question">How do I report a lost item?</button>
+        <div class="faq-answer">
+          Click “Report Item” and fill out the details of the lost item.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">How do I claim a found item?</button>
+        <div class="faq-answer">
+          Go to “Recently Found,” find your item, go to "Look. / Claim" and claim your item.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">Where can I search for my lost item?</button>
+        <div class="faq-answer">
+          You can search for your lost item in the “Look / Claim” page which uses smart matching to match your keywords to reported lost items.
+        </div>
+      </div>
+    </section>
+
+    <section class="home-section home-help">
+      <h2>Need Help?</h2>
+      <p>If you have questions or issues, visit our inquiries page.</p>
+      <button onclick="go('inquiries')">Go to Inquiries</button>
+    </section>
+
+  </div>
+
+</body>
+</html>

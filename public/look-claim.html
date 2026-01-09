@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Look / Claim</title>
+  <link rel="stylesheet" href="./styles.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+
+<body class="look-claim-page">
+
+  <div id="navbar" class="look-claim-page__navbar"></div>
+  <script type="module" src="./js/navbar.js"></script>
+
+  <main class="look-claim-content">
+
+    <section
+      id="searchSection"
+      class="look-claim-section look-claim-section--search"
+    >
+      <header class="look-claim-section-header">
+        <h2 class="look-claim-section-title">Search Lost Items</h2>
+        <p class="look-claim-section-subtitle">
+          Add keywords to narrow down matching lost items
+        </p>
+      </header>
+
+      <div class="search-controls">
+
+        <div
+          id="keywordContainer"
+          class="keywordContainer keyword-list"
+        ></div>
+
+        <div class="search-actions">
+          <button
+            id="addKeyword"
+            class="formBtn search-btn search-btn--primary"
+            type="button"
+          >
+            Add Keyword
+          </button>
+
+          <button
+            id="searchBtn"
+            class="formBtn search-btn search-btn--primary"
+            type="button"
+          >
+            Search
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <section
+      id="claimSection"
+      class="look-claim-section look-claim-section--claim"
+    >
+      <header class="look-claim-section-header">
+        <h2 class="look-claim-section-title">Claim Item</h2>
+        <p class="look-claim-section-subtitle">
+          Enter your details to preview and confirm a claim
+        </p>
+      </header>
+
+      <form class="claim-form">
+
+        <div class="form-group">
+          <input
+            id="claimId"
+            class="formInput claim-input"
+            placeholder="Enter Report ID"
+          >
+        </div>
+
+        <div class="form-group">
+          <input
+            id="claimName"
+            class="formInput claim-input"
+            placeholder="Your Name"
+          >
+        </div>
+
+        <div class="form-group">
+          <input
+            id="claimContact"
+            class="formInput claim-input"
+            placeholder="Contact Information"
+          >
+        </div>
+
+        <div class="form-actions">
+          <button
+            id="submitLookup"
+            class="formBtn claim-preview-btn"
+            type="button"
+          >
+            Preview Claim
+          </button>
+        </div>
+
+      </form>
+
+      <div
+        id="claimPreview"
+        class="claimPreview claim-preview-card"
+        style="display:none;"
+      >
+        <div class="claim-preview-image-wrapper">
+          <img
+            id="previewImg"
+            class="previewImg claim-preview-image"
+            alt="Item Preview"
+          >
+        </div>
+
+        <div class="claim-preview-actions">
+          <button
+            id="confirmClaim"
+            class="formBtn claim-confirm-btn"
+            type="button"
+          >
+            Confirm Claim
+          </button>
+
+          <button
+            id="cancelClaim"
+            class="formBtn claim-cancel-btn"
+            type="button"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <section
+      id="resultsSection"
+      class="look-claim-section look-claim-section--results"
+    >
+      <header class="look-claim-section-header">
+        <h2 class="look-claim-section-title">Search Results</h2>
+        <p class="look-claim-section-subtitle">
+          Matching items based on your keywords
+        </p>
+      </header>
+
+      <div
+        id="results"
+        class="resultsList results-grid"
+      >
+    </div>
+    </section>
+
+  </main>
+
+  <div id="imageModal" class="image-modal" style="display:none;">
+    <div class="image-modal-content">
+      <span id="closeModalBtn" class="image-modal-close">X</span>
+      <img src="" alt="Preview Image" id="modalImage">
+    </div>
+  </div>
+
+
+</div>
+  <script type="module" src="./js/lookClaim.js"></script>
+
+</body>
+</html>

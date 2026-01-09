@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Recently Lost</title>
+  <link rel="stylesheet" href="./styles.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body class="page page-recently-lost">
+
+  <div id="navbar" class="navbar-container"></div>
+  <script type="module" src="./js/navbar.js"></script>
+
+  <header class="page-header">
+    <h1 class="page-title">Recently Lost Items</h1>
+  </header>
+
+  <section id="searchSection" class="content-section search-section">
+    <input id="search" class="formInput search-input" placeholder="Search Lost Items">
+  </section>
+
+  <section class="content-section table-section">
+    <div class="table-wrapper">
+      <table id="lostTable" class="dataTable lost-table">
+        <thead class="table-head">
+          <tr class="table-row table-row-head">
+            <th class="table-header">Date</th>
+            <th class="table-header">ID</th>
+            <th class="table-header">Image</th>
+            <th class="table-header">Location</th>
+            <th class="table-header">Reported By</th>
+            <th class="table-header">Contact</th>
+          </tr>
+        </thead>
+        <tbody class="table-body">
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <script type="module" src="./js/recentlyLost.js"></script>
+</body>
+</html>

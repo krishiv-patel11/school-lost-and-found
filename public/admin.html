@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="./styles.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+
+<body class="admin-page">
+
+  <div id="navbar" class="admin-page__navbar"></div>
+  <script type="module" src="./js/navbar.js"></script>
+
+  <header class="page-header">
+    <h1 class="page-title">Admin Dashboard</h1>
+  </header>
+
+  <main class="admin-page__content">
+
+    <header class="admin-page__header">
+      <h1 class="admin-page__title">Pending Claims</h1>
+    </header>
+
+    <section class="admin-section admin-section--claims">
+      <div id="claims" class="admin-claims__list"></div>
+    </section>
+
+    <section class="admin-section admin-section--delete">
+      <h2 class="admin-section__title">Delete Report</h2>
+
+      <div class="admin-delete__form">
+        <input
+          id="deleteId"
+          class="admin-input admin-input--delete"
+          placeholder="Report ID"
+        >
+        <button
+          id="deleteBtn"
+          class="admin-btn admin-btn--danger"
+        >
+          Delete
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <script type="module" src="./js/admin.js"></script>
+
+</body>
+</html>

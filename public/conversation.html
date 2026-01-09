@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Conversation</title>
+  <link rel="stylesheet" href="./styles.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+
+<body class="conversation-page">
+
+  <div id="navbar" class="conversation-page__navbar"></div>
+  <script type="module" src="./js/navbar.js"></script>
+
+  <main class="conversation-page__content">
+
+    <header class="conversation-page__header">
+      <h1 class="conversation-page__title">Chat</h1>
+    </header>
+
+    <section class="conversation-layout">
+
+      <aside class="conversation-sidebar">
+        <div
+          id="conversationList"
+          class="conversation-list"
+        ></div>
+      </aside>
+
+      <div class="conversation-chat">
+
+        <div
+          id="messagesContainer"
+          class="conversation-messages"
+        ></div>
+
+        <div class="conversation-input-wrapper">
+          <input
+            id="messageInput"
+            class="conversation-input"
+            placeholder="Type a message"
+          >
+          <button
+            id="sendMessageBtn"
+            class="conversation-send-btn"
+          >
+            Send
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <script type="module" src="./js/conversation.js"></script>
+
+</body>
+</html>

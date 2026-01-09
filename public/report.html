@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Report Item</title>
+  <link rel="stylesheet" href="./styles.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body class="page page-report">
+
+  <div id="navbar" class="navbar-container"></div>
+  <script type="module" src="./js/navbar.js"></script>
+
+  <section class="content-section report-section-container">
+    <div class="report-section-box">
+      <h2 class="section-title">Report Lost Item</h2>
+
+      <form class="report-form">
+        <div class="form-group">
+          <input type="file" id="reportImage" class="formInput report-input" accept="image/*">
+        </div>
+
+        <div class="form-group">
+          <input id="itemName" class="formInput report-input" placeholder="Item Name">
+        </div>
+
+        <div class="form-group">
+          <input id="description" class="formInput report-input" placeholder="Description">
+        </div>
+
+        <div class="form-group">
+          <input id="location" class="formInput report-input" placeholder="Where Reported">
+        </div>
+
+        <div class="form-group">
+          <select id="tags" class="formSelect report-input" multiple>
+            <option>Electronics</option>
+            <option>Books</option>
+            <option>Materials</option>
+            <option>ID</option>
+            <option>Bag</option>
+            <option>Jewelry</option>
+            <option>Keys</option>
+            <option>Sports</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <input id="reporterName" class="formInput report-input" placeholder="Your Name">
+        </div>
+
+        <div class="form-group">
+          <input id="reporterContact" class="formInput report-input" placeholder="Phone or Email">
+        </div>
+
+        <div class="form-group">
+          <button id="submitReport" class="formBtn report-submit-btn">Submit</button>
+        </div>
+      </form>
+    </div>
+  </section>
+  
+  <script type="module" src="./js/report.js"></script>
+</body>
+</html>
