@@ -161,6 +161,7 @@ button:hover {
   cursor: pointer;
   padding: 10px 15px;
   position: relative;
+  box-shadow: none !important;
 }
 
 .navbar__btn:hover, .admin-navbar__btn:hover {

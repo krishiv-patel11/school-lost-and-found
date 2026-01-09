@@ -68,7 +68,7 @@ async function runSearch() {
   }
 
   try {
-    const res = await fetch("http://127.0.0.1:5001/school-lost-and-found-dde60/us-central1/semanticSearch", {
+    const res = await fetch("https://us-central1-school-lost-and-found-dde60.cloudfunctions.net/semanticSearch", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query: words.join(" ") })
