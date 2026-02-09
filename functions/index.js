@@ -17,7 +17,10 @@ const ai = genkit({
   ],
 });
 
-const embedder = googleAI.embedder("text-embedding-004");
+const model = genAI.getGenerativeModel({
+  model: "embedding-001"
+});
+
 
 function cosineSimilarity(a, b) {
   let dot = 0, na = 0, nb = 0;
