@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
   const isDemo = urlParams.get("demo") === "true";
 
-  // 🔥 DEMO MODE AUTO LOGIN
   if (isDemo) {
     signInAnonymously(auth)
       .then(() => {
@@ -19,10 +18,9 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Demo login failed:", error);
       });
 
-    return; // stops normal login logic from running
+    return;
   }
 
-  // Normal login flow
   const form = document.querySelector("form");
   const emailInput = document.getElementById("email");
   const passwordInput = document.getElementById("password");
