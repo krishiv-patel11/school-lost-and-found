@@ -14,9 +14,16 @@ onAuthStateChanged(auth, async user => {
     const snap = await getDoc(doc(db, "users", user.uid));
 
     if (!snap.exists()) {
+      // Allow anonymous demo users
+      if (user.isAnonymous) {
+        location.href = "home.html";
+        return;
+      }
+
       location.href = "login.html";
       return;
     }
+
 
     const data = snap.data();
 
