@@ -846,6 +846,16 @@ body.page {
 }
 
 #conversationList button {
+  color: black;  
+  background: white;
+  border: 1px solid #ccc;
+  padding: 8px 12px; 
+  font-size: 16px;   
+  cursor: pointer;  
+}
+
+
+#conversationList button {
   padding: 14px 18px;
   font-size: 16px;
   border-radius: 10px;
