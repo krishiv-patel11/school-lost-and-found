@@ -7,31 +7,26 @@ import { googleAI } from "@genkit-ai/googleai";
 admin.initializeApp();
 const db = admin.firestore();
 
-// Initialize GenKit with GoogleAI plugin
 const ai = genkit({
   plugins: [
-    googleAI({
-      apiKey: process.env.GEMINI_API_KEY, // must be set in env vars
-    }),
+    googleAI({ apiKey: process.env.GEMINI_API_KEY }),
   ],
 });
 
-const embedder = googleAI.embedder("gemini-embedding-001"); // use latest embedding model
+const embedder = googleAI.embedder("gemini-embedding-001");
 
-// Cosine similarity helper
 function cosineSimilarity(a, b) {
   let dot = 0, normA = 0, normB = 0;
   for (let i = 0; i < a.length; i++) {
     dot += a[i] * b[i];
-    normA += a[i] * a[i];
-    normB += b[i] * b[i];
+    normA += a[i] ** 2;
+    normB += b[i] ** 2;
   }
   return dot / (Math.sqrt(normA) * Math.sqrt(normB));
 }
 
-// Stopwords
 const STOPWORDS = new Set([
-  "the", "a", "an", "and", "or", "of", "to", "in", "on", "for", "with", "is", "was"
+  "the","a","an","and","or","of","to","in","on","for","with","is","was"
 ]);
 
 function cleanWords(text) {
@@ -41,68 +36,89 @@ function cleanWords(text) {
     .filter(w => w.length > 2 && !STOPWORDS.has(w));
 }
 
-// Safely extract embedding from GenKit response
 function extractEmbedding(embedResp) {
   if (Array.isArray(embedResp?.embedding)) return embedResp.embedding;
   if (Array.isArray(embedResp?.[0]?.embedding)) return embedResp[0].embedding;
   return null;
 }
 
-// Main semantic search function
-export const semanticSearch = onRequest({ cors: true }, async (req, res) => {
+function literalBoost(queryWords, text) {
+  const textLC = text.toLowerCase();
+  let boost = 0;
+  queryWords.forEach(w => {
+    if (textLC.includes(w)) boost += 15;
+  });
+  return boost;
+}
+
+export const semanticSearch = onRequest(async (req, res) => {
+  res.set("Access-Control-Allow-Origin", "*");
+  res.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.set("Access-Control-Allow-Headers", "Content-Type");
+  if (req.method === "OPTIONS") return res.status(204).send("");
+
   try {
-    let body = req.body;
-    if (!body || typeof body !== "object") {
-      try {
-        body = JSON.parse(req.rawBody.toString());
-      } catch {
-        return res.status(400).json({ error: "Invalid JSON" });
-      }
+    const { query } = req.body || {};
+    if (!query || typeof query !== "string") {
+      return res.status(400).json({ error: "Missing or invalid query" });
     }
 
-    const { query } = body;
-    if (!query || typeof query !== "string") {
-      return res.status(400).json({ error: "Missing query" });
-    }
+    console.log("===== SEMANTIC SEARCH START =====");
+    console.log("Query received:", query);
 
     const words = cleanWords(query);
-    if (!words.length) return res.json([]);
+    console.log("Cleaned words:", words);
+    if (!words.length) return res.json({ results: [] });
 
-    // Dynamic similarity threshold
-    let minSimilarity = 30;
-    if (words.length === 1) minSimilarity = 40;
-    if (words.length >= 4) minSimilarity = 25;
-
-    // Generate query embedding
     const qEmbedRaw = await ai.embed({ embedder, content: query });
     const queryVector = extractEmbedding(qEmbedRaw);
-    if (!queryVector) return res.json([]);
+    if (!queryVector) {
+      console.error("Query embedding invalid:", JSON.stringify(qEmbedRaw, null, 2));
+      return res.status(500).json({ error: "Failed to generate query embedding" });
+    }
+    console.log("Query embedding length:", queryVector.length);
 
-    // Retrieve reports
     const snap = await db.collection("reports").get();
+    console.log(`Loaded ${snap.size} report documents`);
+
     const results = [];
 
     for (const doc of snap.docs) {
       const r = doc.data();
-      if (!["open", "pending"].includes(r.status)) continue;
+      if (!["open","pending"].includes(r.status)) continue;
 
       const searchableText =
-        `${r.itemName || ""} `.repeat(3) +
-        `${(r.tags || []).join(" ")} `.repeat(2) +
+        `${r.itemName || ""} `.repeat(5) + 
+        `${(r.tags || []).join(" ")} `.repeat(4) + 
         `${r.description || ""}`;
 
-      // Use cached embedding or generate
       let embedding = r.embedding;
       if (!embedding) {
-        const embRaw = await ai.embed({ embedder, content: searchableText });
-        embedding = extractEmbedding(embRaw);
-        if (!embedding) continue;
-        await doc.ref.update({ embedding });
+        try {
+          const embRaw = await ai.embed({ embedder, content: searchableText });
+          embedding = extractEmbedding(embRaw);
+          if (embedding) {
+            await doc.ref.update({ embedding });
+            console.log("Saved embedding for doc:", doc.id);
+          } else {
+            console.warn("Failed to generate embedding for doc:", doc.id);
+            continue;
+          }
+        } catch (err) {
+          console.error("Error generating embedding for doc:", doc.id, err);
+          continue;
+        }
       }
 
-      const similarity = cosineSimilarity(queryVector, embedding) * 100;
-      if (similarity < minSimilarity) continue;
+      let similarity = cosineSimilarity(queryVector, embedding) * 100;
+      const boost = literalBoost(words, searchableText);
+      similarity += boost;
 
+      console.log(`Doc ${doc.id} similarity: ${similarity.toFixed(2)}% (+${boost} boost)`);
+      let minSim = 30;
+      if (words.length === 1) minSim = 50;
+      if (words.length >= 4) minSim = 25;
+      if (similarity < minSim) continue;
       let confidence = "LOW";
       if (similarity >= 75) confidence = "HIGH";
       else if (similarity >= 55) confidence = "MEDIUM";
@@ -118,11 +134,15 @@ export const semanticSearch = onRequest({ cors: true }, async (req, res) => {
       });
     }
 
-    results.sort((a, b) => b.similarity - a.similarity);
-    return res.json(results);
+    results.sort((a,b) => b.similarity - a.similarity);
+
+    console.log("Total matches:", results.length);
+    console.log("===== SEMANTIC SEARCH END =====");
+
+    return res.json({ results });
 
   } catch (err) {
-    console.error("FATAL SEARCH ERROR:", err);
-    return res.status(500).json({ error: String(err) });
+    console.error("Fatal error during semantic search:", err);
+    return res.status(500).json({ error: "Server error", details: String(err) });
   }
 });

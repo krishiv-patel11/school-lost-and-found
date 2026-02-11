@@ -42,6 +42,8 @@ async function preloadReports() {
     if (CLAIMED_IDS.has(d.id)) return;
     REPORTS.push({ id: d.id, ...r });
   });
+
+  console.log(`Preloaded ${REPORTS.length} reports after filtering claimed/open.`);
 }
 
 function addKeyword() {
@@ -62,25 +64,37 @@ async function runSearch() {
     .map(i => i.value.trim())
     .filter(Boolean);
 
+  const container = document.getElementById("results");
+
   if (!words.length) {
-    document.getElementById("results").textContent = "Add at least one keyword.";
+    container.textContent = "Add at least one keyword.";
     return;
   }
 
+  container.innerHTML = "<em>Searching...</em>";
+
   try {
-    const res = await fetch("https://us-central1-school-lost-and-found-dde60.cloudfunctions.net/semanticSearch", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: words.join(" ") })
-    });
+    const res = await fetch(
+      "https://us-central1-school-lost-and-found-dde60.cloudfunctions.net/semanticSearch",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: words.join(" ") })
+      }
+    );
 
     if (!res.ok) throw new Error("Search failed");
+
     const data = await res.json();
-    REPORTS = data;
-    displayResults(data);
+    console.log("Semantic Search Response:", data);
+
+    const results = data.results || [];
+    REPORTS = results;
+    displayResults(results);
 
   } catch (err) {
     console.error(err);
+    container.textContent = "Search failed: " + err.message;
     alert("Search failed: " + err.message);
   }
 }
@@ -96,11 +110,12 @@ function displayResults(results) {
   results.forEach(r => {
     const div = document.createElement("div");
     div.className = "result-card";
+
     div.innerHTML = `
       <strong>${r.itemName || "Unknown Item"}</strong><br>
       ${r.description || ""}<br>
       <small>${r.location || ""}</small><br>
-      Match: ${r.similarity}%<br>
+      Match: ${r.similarity}% (${r.confidence})<br>
       ${r.imageUrl ? `<button class="showImageBtn">Show</button>` : ""}<br>
       <small>ID: ${r.id}</small>
     `;
@@ -122,14 +137,12 @@ window.showImage = src => {
   modal.style.display = "flex";
 };
 
-document.getElementById("closeModalBtn").onclick = () => {
+document.getElementById("closeModalBtn")?.addEventListener("click", () => {
   document.getElementById("imageModal").style.display = "none";
-};
+});
 
-document.getElementById("imageModal").addEventListener("click", e => {
-  if (e.target.id === "imageModal") {
-    e.target.style.display = "none";
-  }
+document.getElementById("imageModal")?.addEventListener("click", e => {
+  if (e.target.id === "imageModal") e.target.style.display = "none";
 });
 
 window.closeModal = () => {
@@ -142,9 +155,12 @@ function previewClaim() {
   const report = REPORTS.find(r => r.id === id);
   if (!report) { alert("Invalid Report ID"); return; }
   PREVIEW_REPORT = report;
+
   const img = document.getElementById("previewImg");
   if (img) img.src = report.imageUrl || "";
   togglePreview(true);
+
+  console.log("Previewing claim for report:", report);
 }
 
 function togglePreview(show) {
@@ -154,33 +170,33 @@ function togglePreview(show) {
 
 async function confirmClaim() {
   if (!PREVIEW_REPORT) return;
+
   const name = document.getElementById("claimName")?.value.trim();
   const contact = document.getElementById("claimContact")?.value.trim();
-  if (!name || !contact) { alert("Please fill out all fields."); return; }
 
-  await addDoc(collection(db,"claims"), { 
-    reportId: PREVIEW_REPORT.id, 
-    claimantName: name, 
-    contact, 
-    userId: auth.currentUser.uid,
-    status: "pending", 
-    timestamp: Timestamp.now() 
-  });
+  if (!name || !contact) {
+    alert("Please fill out all fields.");
+    return;
+  }
 
-  alert("Claim submitted.");
-  togglePreview(false);
-  await preloadReports();
-}
+  try {
+    await addDoc(collection(db,"claims"), { 
+      reportId: PREVIEW_REPORT.id, 
+      claimantName: name, 
+      contact, 
+      userId: auth.currentUser.uid,
+      status: "pending", 
+      timestamp: Timestamp.now() 
+    });
 
-const closeBtn = document.getElementById("closeModalBtn");
-if (closeBtn) closeBtn.addEventListener("click", () => {
-  const modal = document.getElementById("imageModal");
-  modal.style.display = "none";
-});
+    alert("Claim submitted.");
+    togglePreview(false);
+    await preloadReports();
 
-const modal = document.getElementById("imageModal");
-if (modal) {
-  modal.addEventListener("click", e => {
-    if (e.target === modal) modal.style.display = "none";
-  });
+    console.log("Claim confirmed for report:", PREVIEW_REPORT.id);
+
+  } catch (err) {
+    console.error("Error confirming claim:", err);
+    alert("Failed to submit claim.");
+  }
 }

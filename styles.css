@@ -1567,10 +1567,13 @@ body.page {
 
 .home-hero {
   padding: 72px 24px;
-  background: linear-gradient(135deg, #111827, #0a0f28);
+  background: 
+    linear-gradient(135deg, rgba(17,24,39,0.85), rgba(10,15,40,0.85)),
+    url('imgres.jpeg') center/cover no-repeat;
   border-radius: 24px;
   text-align: center;
   box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+  color: white;
 }
 
 .home-hero__title {
@@ -1593,12 +1596,32 @@ body.page {
 }
 
 .primary-card {
-  background: #111827;
   border-radius: 24px;
   padding: 36px;
   text-align: center;
   box-shadow: 0 14px 35px rgba(0,0,0,0.35);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#help-card {
+  background: 
+    linear-gradient(135deg, rgba(17,24,39,0.85), rgba(10,15,40,0.85)),
+    url('help.png') center/cover no-repeat;
+  color: white; 
+}
+
+#lost-card {
+  background: 
+    linear-gradient(135deg, rgba(17,24,39,0.85), rgba(10,15,40,0.85)),
+    url('lost-something.jpg') center/cover no-repeat;
+  color: white;
+}
+
+#found-card {
+  background: 
+    linear-gradient(135deg, rgba(17,24,39,0.85), rgba(10,15,40,0.85)),
+    url('found-something.png') center/cover no-repeat;
+  color: white;
 }
 
 .primary-card:hover {
